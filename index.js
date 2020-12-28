@@ -84,7 +84,7 @@ module.exports = ({ markdownAST, markdownNode, getNode }, { components }) => {
       } else if (url.slice(-5) == '.html') {
         var label = 'HTML';
       }
-      return ` &ensp;<a href="${url}">[${label || 'link'}]</a>`;
+      return ` &ensp;<a href="${url}" target="_blank">[${label || 'link'}]</a>`;
     }/* else if ("doi" in ent){
     return ` &ensp;<a href="https://doi.org/${ent.doi}" >[DOI]</a>`;
   }*/ else {
@@ -93,7 +93,7 @@ module.exports = ({ markdownAST, markdownNode, getNode }, { components }) => {
   }
   function doi_string(ent, new_line) {
     if ('doi' in ent) {
-      return `${new_line ? '<br>' : ''} <a href="https://doi.org/${ent.doi}" style="text-decoration:inherit;">DOI: ${ent.doi}</a>`;
+      return `${new_line ? '<br>' : ''} <a target="_blank" href="https://doi.org/${ent.doi}" style="text-decoration:inherit;">DOI: ${ent.doi}</a>`;
     } else {
       return '';
     }
@@ -153,7 +153,7 @@ module.exports = ({ markdownAST, markdownNode, getNode }, { components }) => {
   function inline_cite_short(keys, bibliography) {
     function cite_string(key) {
       if (bibliography.get(key)) {
-        if (!(key in citations)) {
+        if (!(citations.includes(key))) {
           citations.push(key)
         }
         var n = citations.indexOf(key) + 1;
@@ -166,7 +166,6 @@ module.exports = ({ markdownAST, markdownNode, getNode }, { components }) => {
   }
 
   visit(markdownAST, "html", (node, index, parent) => {
-    console.log(node.value)
     if (node.value.startsWith(`<bibliography>`)) {
       parent.type = "div"
 
@@ -200,8 +199,6 @@ module.exports = ({ markdownAST, markdownNode, getNode }, { components }) => {
 
   visit(markdownAST, `text`, node => {
     var citekeys = node.value.match(/\\cite{([^}]*)}/g);
-
-    //console.log(citekeys);
     for (var k in citekeys) {
       const keys_str = citekeys[k].substring(6, citekeys[k].length - 1);
       const keys = keys_str.split(',');
