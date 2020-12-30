@@ -8,7 +8,7 @@ module.exports = ({ markdownAST, markdownNode, getNode }, { components }) => {
   const bibliography = new Map();
 
   // let's read the markdown
-  const bibtex_f = getNode(markdownNode.parent).dir + '/bibliography.bib';
+  const bibtex_f = getNode(markdownNode.parent).dir + '/../bibliography.bib';
   let bibtex = '';
   if (fs.existsSync(bibtex_f)) {
     bibtex = fs.readFileSync(bibtex_f, `utf-8`);
